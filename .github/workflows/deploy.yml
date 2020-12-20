@@ -1,0 +1,88 @@
+name: Resource Deployment
+
+on:
+  repository_dispatch:
+    types: [data-updated, parser-updated]
+  workflow_dispatch:
+    inputs:
+      parser-tag:
+        description: Parser tag to use
+        required: false
+        default: main
+      resource-tag:
+        description: Resource version tag to use
+        required: false
+
+jobs:
+  build:
+    name: Build resources 
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "[INFO] Parser Tag"
+        if: ${{ github.event.inputs.parser-tag }}
+        run: echo ${{ github.event.inputs.parser-tag }}
+        
+      - name: "[INFO] Event Payload Message"
+        if: ${{ github.event.client_payload.message }}
+        run: echo ${{ github.event.client_payload.message }}
+
+      - name: Checkout dragalia-site-resources (this repository)
+        uses: actions/checkout@v2
+        with:
+          path: dragalia-site-resources
+
+      - name: Checkout dragalia-data-depot
+        uses: actions/checkout@v2
+        with:
+          repository: RaenonX-DL/dragalia-data-depot
+          path: dragalia-data-depot
+          ref: ${{ github.event.inputs.resource-tag }}
+        
+      - name: Checkout dragalia-data-parse
+        uses: actions/checkout@v2
+        with:
+          repository: RaenonX-DL/dragalia-data-parse
+          path: dragalia-data-parse
+          ref: ${{ github.event.inputs.parser-tag }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        
+      - name: Parse and export the data
+        run: |
+          cd dragalia-data-parse
+          python script_export_pipeline.py --config ../dragalia-site-resources/.config/export.ini
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "RaenonX"
+          git config --global user.email "raenonx0710@gmail.com"
+          
+      - name: Check for changes
+        id: check-changes
+        run: |
+          cd dragalia-site-resources
+          echo ::set-output name=diff::$(git status --porcelain)
+
+      - name: Commit exported resources (by repo dispatch)
+        if: github.event_name == 'repository_dispatch' && steps.check-changes.outputs.diff
+        run: |
+          cd dragalia-site-resources
+          git add .
+          git commit -m "Update (Auto / ${{ github.event.client_payload.message }})"
+
+      - name: Commit exported resources (by manual dispatch)
+        if: github.event_name == 'workflow_dispatch' && steps.check-changes.outputs.diff
+        run: |
+          cd dragalia-site-resources
+          git add .
+          git commit -m "Update (Manual)"
+
+      - name: Push changes
+        if: steps.check-changes.outputs.diff
+        run: |
+          cd dragalia-site-resources
+          git pull
+          git push
