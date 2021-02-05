@@ -1,8 +1,13 @@
 # dragalia-site-resources
 
+[![Resource-cd]][Resource-cd-link]
+
 Resource repository for [Dragalia Info Website][DL-info].
 
-[DL-info]: http://dl.raenonx.cc
+[Resource-cd]: https://github.com/RaenonX-DL/dragalia-site-resources/workflows/Resource%20Deployment/badge.svg
+[Resource-cd-link]: https://github.com/RaenonX-DL/dragalia-site-resources/actions?query=workflow%3A%22Resource+Deployment%22
+
+[DL-info]: https://dl.raenonx.cc
 
 ### Related repositories
 
