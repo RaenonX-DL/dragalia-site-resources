@@ -17,9 +17,9 @@ Resource repository for [Dragalia Info Website][DL-info].
 
 [RaenonX-DL/dragalia-site-front][DL-front]: Frontend code of the [Dragalia Info Website][DL-info].
 
-[RaenonX-DL/dragalia-site-back][DL-back]: Backend code of the [Dragalia Info Website][DL-info].
+[RaenonX-DL/dragalia-site-back-2][DL-back]: Backend code of the [Dragalia Info Website][DL-info].
 
 [DL-depot]: https://github.com/RaenonX-DL/dragalia-data-depot
 [DL-parse]: https://github.com/RaenonX-DL/dragalia-data-parse
 [DL-front]: https://github.com/RaenonX-DL/dragalia-site-front
-[DL-back]: https://github.com/RaenonX-DL/dragalia-site-back
+[DL-back]: https://github.com/RaenonX-DL/dragalia-site-back-2
