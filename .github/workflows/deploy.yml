@@ -12,6 +12,10 @@ on:
       resource-tag:
         description: Resource version tag to use
         required: false
+      out-branch:
+        description: Target branch to push the resources
+        required: false
+        default: main
 
 jobs:
   build:
@@ -27,10 +31,15 @@ jobs:
       - name: "[INFO] Event Payload Message"
         if: ${{ github.event.client_payload.message }}
         run: echo ${{ github.event.client_payload.message }}
+        
+      - name: "[INFO] Target Output Branch"
+        if: ${{ github.event.inputs.out-branch }}
+        run: echo ${{ github.event.inputs.out-branch }}
 
       - name: Checkout dragalia-site-resources (this repository)
         uses: actions/checkout@v2
         with:
+          ref: ${{ github.event.inputs.out-branch }}
           path: dragalia-site-resources
 
       - name: Checkout dragalia-data-depot
