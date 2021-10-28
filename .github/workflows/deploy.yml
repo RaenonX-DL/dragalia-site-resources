@@ -93,5 +93,5 @@ jobs:
         if: steps.check-changes.outputs.diff
         run: |
           cd dragalia-site-resources
-          git pull
+          git pull --rebase
           git push
